@@ -53,7 +53,7 @@ def add_default_arguments(parser: ArgumentParser) -> None:
         "-e",
         "--env",
         type=str,
-        choices=["dev", "stage", "prod"],
+        choices=["qa", "dev", "stage", "prod", "test", "preview"],
         required=True,
         help="secret env",
     )

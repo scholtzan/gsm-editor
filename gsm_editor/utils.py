@@ -133,7 +133,7 @@ def edit_secret_file(file: pathlib.Path, validate: bool = True):
         except json.decoder.JSONDecodeError as e:
             print(e)
             again = input("Try again [Y/n]: ")
-            if again != "Y" and again != "":
+            if again.upper() != "Y" and again != "":
                 break
 
     if not valid_json:
