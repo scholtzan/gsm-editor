@@ -15,7 +15,7 @@
     # This will create a secret for you if one does not already exist
     ./gsm.py edit -p moz-fx-testapp1-nonprod -e stage
 
-    # set a secret's value without reading it (write-only; creates if missing)
+    # set an existing secret's value without reading it (write-only; never creates)
     ./gsm.py set -p moz-fx-testapp1-nonprod -e stage -s restricted-something
 
     Tips:
@@ -87,7 +87,7 @@ def add_parser_args(parser: ArgumentParser) -> None:
 
     set_secret = subparsers.add_parser(
         "set",
-        help="Set a secret's value without reading it (write-only; creates if missing)",
+        help="Set an existing secret's value without reading it (write-only; never creates)",
     )
     add_default_arguments(parser=set_secret)
     set_secret.add_argument(

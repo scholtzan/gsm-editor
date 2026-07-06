@@ -46,28 +46,33 @@ def edit_secret(config: CommandConfig):
 
 
 def set_secret(config: CommandConfig, data_file: str | None = None):
-    """Set a secret's value without reading the existing one.
+    """Set the value of an existing secret without reading it.
 
     Unlike `edit` (read-modify-write, needs `versions.access`), `set` only writes, so
     it works for write-only principals. Payload comes from --data-file or a blank
-    editor; the secret is created if missing, otherwise a new version is added.
+    editor. The secret must already exist; `set` adds a new version but never creates
+    one. Setting a value for a missing secret errors out.
     """
     secret = Secret.from_command_config(config=config)
+
+    # Fail before opening an editor if the secret does not exist yet.
+    if not utils.secret_exists(secret=secret):
+        raise SecretNotFoundError(
+            f"`{secret}` does not exist. `set` updates existing secrets only and does "
+            "not create them."
+        )
+
     with tempfile.NamedTemporaryFile() as temporary_file:
         file = pathlib.Path(temporary_file.name)
 
         if data_file:
             shutil.copyfile(data_file, file)
         else:
-            # Open an empty buffer — never read or display the current value.
+            # Open an empty buffer, never read or display the current value.
             utils.edit_secret_file(file=file, validate=False)
 
-        if utils.secret_exists(secret=secret):
-            utils.add_secret_version(secret=secret, file=file)
-            print(f"Added a new version to `{secret}`")
-        else:
-            utils.create_secret(secret=secret, file=file)
-            print(f"Created `{secret}`")
+        utils.add_secret_version(secret=secret, file=file)
+        print(f"Added a new version to `{secret}`")
 
 
 def view_secret(config: CommandConfig):

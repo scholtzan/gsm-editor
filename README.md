@@ -41,11 +41,10 @@ $ python gsm.py view -p moz-fx-testapp1-nonprod -e stage -s cronjob-sync-somethi
 $ python gsm.py edit -p moz-fx-testapp1-nonprod -e stage
 ```
 
-#### set a secret's value without reading it (write-only):
+#### set an existing secret's value without reading it (write-only):
 
-Unlike `edit` (read-modify-write, needs read access), `set` only writes — use it when you
-may write a secret but not read it. Creates the secret if missing, otherwise adds a new
-version.
+Unlike `edit` (read-modify-write, needs read access), `set` only writes. Use it when you
+may write a secret but not read it.
 
 ```bash
 # open a blank editor and write the result as a new version
